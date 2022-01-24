@@ -1,49 +1,50 @@
-import tkinter
+from my_functions import *
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+import tkinter
+class MakeWindow(tkinter.Tk):   #   TRY ANALIZE AND UNDERSTAND THIS
 
-def btn_pressed():
-    messagebox.showinfo(":) Button status message :)", "Button has been pressed.\n  ✌.|•͡˘‿•͡˘|.✌")
+    def __init__(self) -> None:
+        tkinter.Tk.__init__(self)
 
-root = Tk()
-root.title("842u")
+        window_setup(self, title="LOGIN WINDOW", min_width=300, min_height=500, res=True)
 
-width = 300
-height = 450
-screen_width = root.winfo_screenwidth()
-screen_heigth = root.winfo_screenheight()
-x_coord = int((screen_width/2) - (width/2))
-y_coord = int((screen_heigth/2) - (height/2))
-root.geometry(f"{width}x{height}+{x_coord}+{y_coord}")
-root.minsize(width,height)
+        style_setup(self, txt_clr="#ffdd00", bg="black", fnt=("Bauhaus 93",14))     #   style_setup NEED TWEAKS -> MAKE DEFAULT VALUES
+        style_setup(self, style="foot.", txt_clr="#5e5e5e", bg="black", fnt=("",8))
 
-style = ttk.Style()
-style.configure("N.TFrame", background="black")
-style.configure("N.TLabel", foreground="#ffe600", background="black", font=("",16), justify=CENTER)
-style.configure("WM.TLabel", foreground="#2e2e2e", background="black", font=("",10), justify=CENTER)
-style.configure("N.TButton", foreground="black", background="black")
+        frm_1 = ttk.Frame(self)
+        frm_1.pack(fill=BOTH, expand=True)
 
-frm_1 = ttk.Frame(root, style="N.TFrame")
-frm_1.pack(fill=BOTH, expand=True)
+        lbl_1 = ttk.Label(frm_1, text="HELLO STRANGER\n\nENTER MASTER PASSWORD:", justify=CENTER)
+        lbl_1.pack(pady=10)
 
-txt = ttk.Label(frm_1, text="Hello\n\nEnter master password:", style="N.TLabel")
-txt.pack(anchor=CENTER, pady=10)
+        self.ent_1 = ttk.Entry(frm_1, show="*", justify=CENTER)
+        self.ent_1.pack(pady=10)
 
-ent = ttk.Entry(frm_1, show="*", justify=CENTER, width=30)
-ent.pack(pady=20, anchor=CENTER)
+        btn_1 = ttk.Button(frm_1, text="LOG IN", command=self.on_click)
+        btn_1.pack()
 
-btn_confirm = ttk.Button(frm_1, text="CONFIRM", style="N.TButton", command=btn_pressed)
-btn_confirm.pack(anchor=CENTER)
+        frm_2 = ttk.Frame(self)
+        frm_2.pack(fill=BOTH, anchor=S)
 
-photo = tkinter.PhotoImage(file="img.png")
-frm_2 = ttk.Frame(frm_1, style="N.TFrame")
-frm_2.pack(anchor=S, expand=True)
+        photo = tkinter.PhotoImage(file="img.png")
+        logo = ttk.Label(frm_2, image=photo)
+        logo.pack(pady=50)
+        logo.photo = photo  #   WITHOUT IT IMG DOESNT DISPLAY -> PhotoImage Garbage Collector PROBLEM 
 
-logo = ttk.Label(frm_2, image=photo, style="N.TLabel")
-logo.pack(fill=BOTH)
+        lbl_ft = ttk.Label(frm_2, text="842u", style="foot.TLabel")
+        lbl_ft.pack(side="right")
 
-txt_wm = ttk.Label(frm_1, text="842u", justify="right", style="WM.TLabel")
-txt_wm.pack(fill=BOTH, side="right")
+        lbl_vr = ttk.Label(frm_2, text="v.0.1.1", style="foot.TLabel",)
+        lbl_vr.pack(side="left")
 
-root.mainloop()
+    def on_click(self):
+        if  self.ent_1.get() == "asd":
+            messagebox.showinfo("PASSWORD CHECK", "PASSWORD OK")
+        else:
+            messagebox.showerror("PASSWORD CHECK", "WRONG PASSWORD")
+
+
+window = MakeWindow()
+window.mainloop()
