@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import ttk
 
-def window_setup(window_name, title, min_width, min_height, res):
+def window_setup(window_name, title="new window", min_width=100, min_height=100, res=True):
 
     #   TITLE
     window_name.title(f"{title}")
