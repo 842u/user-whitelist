@@ -8,6 +8,8 @@ class MakeWindow(tkinter.Tk):   #   TRY ANALIZE AND UNDERSTAND THIS
     def __init__(self) -> None:
         tkinter.Tk.__init__(self)
 
+        version = "0.1.0"
+
         window_setup(self, title="LOGIN WINDOW", min_width=300, min_height=500, res=True)
 
         style_setup(self, txt_clr="#ffdd00", bg="black", fnt=("Bauhaus 93",14))     #   style_setup NEED TWEAKS -> MAKE DEFAULT VALUES
@@ -36,7 +38,7 @@ class MakeWindow(tkinter.Tk):   #   TRY ANALIZE AND UNDERSTAND THIS
         lbl_ft = ttk.Label(frm_2, text="842u", style="foot.TLabel")
         lbl_ft.pack(side="right")
 
-        lbl_vr = ttk.Label(frm_2, text="v.0.1.1", style="foot.TLabel",)
+        lbl_vr = ttk.Label(frm_2, text=f"v.{version}", style="foot.TLabel",)
         lbl_vr.pack(side="left")
 
     def on_click(self):
