@@ -22,9 +22,12 @@ def window_setup(window_name, title, min_width, min_height, res):
     window_name.minsize(window_name.min_width,window_name.min_height)
     window_name.geometry(f"{window_name.min_width}x{window_name.min_height}+{x_coord}+{y_coord}")
 
-def style_setup(window_name, fg, bg):
+def style_setup(window_name, style="", txt_clr="black", bg="white", fnt=("",14),):
     
     window_name.style = ttk.Style()
-    components = ["TFrame", "TLabel", "TButton"]
-    for i in components:
-        window_name.style.configure(i, foreground=fg, background=bg)
+
+    window_name.style.configure(style+"TLabel", foreground=txt_clr, background=bg, font=fnt)
+
+    widgets = ["TFrame", "TButton"]
+    for i in widgets:
+        window_name.style.configure(style+i, background=bg)
