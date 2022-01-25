@@ -1,3 +1,4 @@
+from turtle import st
 from my_functions import *
 from tkinter import *
 from tkinter import ttk
@@ -8,7 +9,7 @@ class MainWindow(tkinter.Tk):   #   TRY ANALIZE AND UNDERSTAND THIS
     def __init__(self) -> None:
         tkinter.Tk.__init__(self)
 
-        version = "0.1.0"
+        version = "0.1.1"   #   major.minor.patch
 
         window_setup(self, title="LOGIN WINDOW", min_width=300, min_height=500, res=False)
 
@@ -48,7 +49,7 @@ class MainWindow(tkinter.Tk):   #   TRY ANALIZE AND UNDERSTAND THIS
         if  self.ent_mw_1.get() == password:
             self.withdraw()
             self.acces_window = NewWindow(self)
-            messagebox.showinfo("PASSWORD CHECK", "PASSWORD OK")
+            messagebox.showinfo("PASSWORD OK", "ACCES GRANTED")
         else:
             messagebox.showerror("PASSWORD CHECK", "WRONG PASSWORD")
 
@@ -58,21 +59,30 @@ class NewWindow(tkinter.Toplevel):
     def __init__(self, parent) -> None:
         tkinter.Toplevel.__init__(self, parent)
 
-        window_setup(self, title="ACCES WINDOW", min_width=500, min_height=300)
+        window_setup(self, title="ACCES WINDOW", min_width=400, min_height=250)
         style_setup(self, txt_clr="#ffdd00", bg="black", fnt=("Bauhaus 93",16))
 
         frm_aw_1 = ttk.Frame(self)
         frm_aw_1.pack(fill=BOTH, expand=True)
 
-        lbl_aw_n = ttk.Label(frm_aw_1, text="Name: ").grid(row=1, column=1, sticky=W)
-        lbl_aw_p = ttk.Label(frm_aw_1, text="Password: ").grid(row=2, column=1, sticky=W)
-        lbl_aw_e = ttk.Label(frm_aw_1, text="Email: ").grid(row=3, column=1, sticky=W)
-        ent_aw_n = ttk.Entry(frm_aw_1).grid(row=1, column=2)
-        ent_aw_p = ttk.Entry(frm_aw_1).grid(row=2, column=2)
-        ent_aw_e = ttk.Entry(frm_aw_1).grid(row=3, column=2)
+        frm_aw_1.columnconfigure(1, weight=0)
+        frm_aw_1.columnconfigure(2, weight=1)
+        frm_aw_1.rowconfigure(1, weight=0)
+        frm_aw_1.rowconfigure(tuple(range(2,5)), weight=1)
 
-        btn_aw_close = ttk.Button(frm_aw_1, text="CLOSE APP", command=parent.destroy).grid(row=4, column=2)
-        btn_aw_au = ttk.Button(frm_aw_1, text="ADD USER").grid(row=4, column=1)
+        lbl_aw_d = ttk.Label(frm_aw_1, text="ADD USER TO WHITELIST").grid(row=1, column=1, columnspan=2, pady=20)
+
+        lbl_aw_n = ttk.Label(frm_aw_1, text="Name: ").grid(row=2, column=1, sticky=W)
+        self.ent_aw_n = ttk.Entry(frm_aw_1).grid(row=2, column=2, sticky=E+W, padx=20)
+
+        lbl_aw_p = ttk.Label(frm_aw_1, text="Password: ").grid(row=3, column=1, sticky=W)
+        self.ent_aw_p = ttk.Entry(frm_aw_1).grid(row=3, column=2, sticky=E+W, padx=20)
+
+        lbl_aw_e = ttk.Label(frm_aw_1, text="Email: ").grid(row=4, column=1, sticky=W)
+        self.ent_aw_e = ttk.Entry(frm_aw_1).grid(row=4, column=2, sticky=E+W, padx=20)
+
+        btn_aw_au = ttk.Button(frm_aw_1, text="ADD USER").grid(row=5, column=1, pady=20)
+        btn_aw_close = ttk.Button(frm_aw_1, text="CLOSE APP", command=parent.destroy).grid(row=5, column=2, pady=20)
 
 
 window = MainWindow()
