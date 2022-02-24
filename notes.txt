@@ -1,11 +1,42 @@
-display user list and add to user list 
 
-close app butons fix
+### TODO ###
 
-logout button
+    all operations on one data frame? -> parent AccesWindow? 
 
-write to csv method
+    data hashing
 
-read from csv method
+    ask when closing if saved
 
-PANDAS?!?!?!? TO WORK WITH CSV
+    logout button
+
+    close app butons fix
+
+    make some animations if possible
+
+    edit multiple user at one time -> selectmode treeview
+
+    if user not selected to del -> except
+
+    clear entry after adding user
+
+
+### DONE ###
+
+    PANDAS?!?!?!? TO WORK WITH CSV
+
+    display user list and add to user list 
+
+    read from csv method - v0.1.2
+
+    write to csv method - v0.1.2
+
+
+### TEMP ###
+
+1,a,a,a
+2,b,b,b
+3,c,c,c
+4,d,d,d
+5,e,e,e
+6,f,f,f
+7,g,g,g

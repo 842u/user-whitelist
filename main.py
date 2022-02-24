@@ -1,13 +1,13 @@
+from asyncio.windows_events import NULL
+import tkinter
+import pandas as pd
 from functions import *
 from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
-from user import User
-import tkinter
-import csv
 
-class MainWindow(tkinter.Tk):
-    version = "0.1.2"
+
+class LoginWindow(tkinter.Tk):
+    version = "0.2.0"
     master_password = "123"
     max_users = 10
 
@@ -19,68 +19,114 @@ class MainWindow(tkinter.Tk):
         if  self.ent_mw_1.get() == self.master_password:
             self.withdraw()
             messagebox.showinfo("PASSWORD OK", "ACCES GRANTED")
-            self.acces_window = NewWindow(self)
+            AccesWindow(self)
         else:
             messagebox.showerror("PASSWORD CHECK", "WRONG PASSWORD")
 
 
-class NewWindow(tkinter.Toplevel):
+class AccesWindow(tkinter.Toplevel):
+    selected_user = NULL
+
     def __init__(self, parent) -> None:
         tkinter.Toplevel.__init__(self, parent)
-
         acces_window_layout(self, parent)
 
-        User.instantion_from_whitelist()
-        display_user_table(self)
+        self.df = pd.read_csv('whitelist.csv', index_col=False)
 
-    def on_click(self):
+        for x in range(len(self.df)):
+            self.tw_aw_1.insert(parent='', index='end', iid=x, text='', 
+                values=(
+                    x+1,
+                    self.df.loc[x,'name'],
+                    self.df.loc[x,'password'],
+                    self.df.loc[x,'email']
+                )
+            )
+            
+    def on_click_add(self):
         user_name = self.ent_aw_n.get()
         user_password = self.ent_aw_p.get()
         user_email = self.ent_aw_e.get()
-        actual_number_of_users = len(User.user_list)
+
+        actual_number_of_users = len(self.df)
 
         if user_name=="" or user_password=="" or user_email=="":
+
             messagebox.showerror("DATA INCOMPLETE", "PLEASE ENTER ALL DATA")
 
-        elif actual_number_of_users < MainWindow.max_users:
-            with open('whitelist.csv', 'a') as f:
-                field_names = ['index', 'name', 'password', 'email']
-                writer = csv.DictWriter(f, fieldnames=field_names)
-                writer.writerow({
-                    'index' : f'{actual_number_of_users+1}', 
-                    'name' : f'{user_name}', 
-                    'password' : f'{user_password}', 
-                    'email' : f'{user_email}'})
-            
-            User.instantion_from_whitelist()
+        elif actual_number_of_users < LoginWindow.max_users:
 
-            add_user_to_table(self)
-            
+            self.df.loc[-1] = [actual_number_of_users+1, user_name, user_password, user_email]
+            self.df = self.df.reset_index(drop=True)
+
+            x = len(self.df)
+
+            self.tw_aw_1.insert(parent='', index='end', iid=x, text='', 
+                values=(
+                    self.df.loc[x-1, 'index'],
+                    self.df.loc[x-1,'name'],
+                    self.df.loc[x-1,'password'],
+                    self.df.loc[x-1,'email']
+                )
+            )
+            self.df.to_csv('whitelist.csv', index=False)
+
         else:
+
             messagebox.showerror("USER NUMBER", "MAXIMUM NUMBER OF USERS REACHED")
 
     def on_click_del(self):
-        # x = int(self.tbl.focus())+1
-        # self.tbl.delete(x)
+        selected_user = int(self.tw_aw_1.focus())
 
-        # print(User.user_list)
-        # del User.user_list[x]
-        # print(User.user_list)
+        self.df = self.df.drop(selected_user)
+        self.df = self.df.reset_index(drop=True)
 
-        # ilosc = len(User.user_list)
+        self.tw_aw_1.delete(*self.tw_aw_1.get_children())
 
-        # with open('whitelist.csv', 'a') as f:
-        #         field_names = ['index', 'name', 'password', 'email']
-        #         writer = csv.DictWriter(f, fieldnames=field_names)
+        for x in range(len(self.df)):
+            self.df.loc[x,'index'] = x+1
 
-        #         for i in range(ilosc):
-        #             writer.writerow({
-        #                 'index' : f'{i}', 
-        #                 'name' : f'{User.user_list[i].name}', 
-        #                 'password' : f'{User.user_list[i].password}', 
-        #                 'email' : f'{User.user_list[i].email}'})
+            self.tw_aw_1.insert(parent='', index='end', iid=x, text='', 
+                values=(
+                    x+1,
+                    self.df.loc[x,'name'],
+                    self.df.loc[x,'password'],
+                    self.df.loc[x,'email']
+                )
+            )
+
+        self.df.to_csv('whitelist.csv', index=False)
+
+    def on_click_edit(self):
+        AccesWindow.selected_user = int(self.tw_aw_1.focus())
+        UserWindow(self)
+
+
+class UserWindow(tkinter.Toplevel):
+    def __init__(self, parent) -> None:
+        tkinter.Toplevel.__init__(self, parent)
+        user_window_layout(self)
+
+        selected_user = AccesWindow.selected_user
+        print(selected_user)
+
+        self.df = pd.read_csv('whitelist.csv', index_col=False)
+
+        self.tw_uw_1.insert(parent='', index='end', iid=selected_user, text='', 
+            values=(
+                selected_user+1,
+                self.df.loc[selected_user,'name'],
+                self.df.loc[selected_user,'password'],
+                self.df.loc[selected_user,'email']
+            )
+        )
+    
+    def on_click_save():
         pass
-            
 
-app_main_window = MainWindow()
+    def on_click_reset():
+        pass
+
+
+app_main_window = LoginWindow()
 app_main_window.mainloop()
