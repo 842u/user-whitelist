@@ -15,8 +15,10 @@ def window_setup(window_name, title="new window", min_width=100, min_height=100,
 
     screen_width = window_name.winfo_screenwidth()
     screen_height = window_name.winfo_screenheight()
+
     x_coord = int((screen_width/2) - (min_width/2))
     y_coord = int((screen_height/2) - (min_height/2))
+    
     window_name.minsize(window_name.min_width,window_name.min_height)
     window_name.geometry(f"{window_name.min_width}x{window_name.min_height}+{x_coord}+{y_coord}")
 
@@ -75,7 +77,7 @@ def acces_window_layout(self, parent):
     self.frm_aw_2.pack(fill=BOTH, expand=True)
 
     # LABEL
-    self.lbl_aw_d = ttk.Label(self.frm_aw_1, text="ADD USER TO WHITELIST")
+    self.lbl_aw_d = ttk.Label(self.frm_aw_1, text="USER WHITELIST")
     self.lbl_aw_d.grid(row=1, column=1, columnspan=4, pady=20)
 
     self.lbl_aw_n = ttk.Label(self.frm_aw_1, text="User : ")
@@ -185,7 +187,7 @@ def user_window_layout(self):
     self.ent_uw_e.grid(row=4, column=2, sticky=E+W, padx=20)
 
     # BUTTON
-    self.btn_uw_s = ttk.Button(self.frm_uw_2, text="SAVE")
+    self.btn_uw_s = ttk.Button(self.frm_uw_2, text="SAVE", command=self.on_click_save)
     self.btn_uw_s.grid(row=1, column=1, padx=20, pady=20)
 
     self.btn_uw_r = ttk.Button(self.frm_uw_2, text="RESET")

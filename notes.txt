@@ -1,7 +1,7 @@
 
 ### TODO ###
 
-    all operations on one data frame? -> parent AccesWindow? 
+    all operations on one data frame? -> parent AccesWindow?
 
     data hashing
 
@@ -15,9 +15,11 @@
 
     edit multiple user at one time -> selectmode treeview
 
-    if user not selected to del -> except
+    if user not selected to delete or edit -> except
 
     clear entry after adding user
+
+    work on csv only and refresh treeview only???
 
 
 ### DONE ###
