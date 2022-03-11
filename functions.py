@@ -1,197 +1,218 @@
 import tkinter
-import pandas as pd
 from tkinter import *
 from tkinter import ttk
 
+def window_setup(window_master, title='new window', min_width=100, min_height=100, res=True):
+    window_master.title(f'{title}')
 
-def window_setup(window_name, title="new window", min_width=100, min_height=100, res=True):
-    window_name.title(f"{title}")
+    window_master.min_width = min_width
+    window_master.min_height = min_height
 
-    window_name.min_width = min_width
-    window_name.min_height = min_height
+    if res == False: window_master.resizable(0,0)
 
-    if res == False:
-        window_name.resizable(0,0)
+    screen_width = window_master.winfo_screenwidth()
+    screen_height = window_master.winfo_screenheight()
 
-    screen_width = window_name.winfo_screenwidth()
-    screen_height = window_name.winfo_screenheight()
-
-    x_coord = int((screen_width/2) - (min_width/2))
-    y_coord = int((screen_height/2) - (min_height/2))
+    x_pos = int((screen_width/2) - (min_width/2))
+    y_pos = int((screen_height/2) - (min_height/2))
     
-    window_name.minsize(window_name.min_width,window_name.min_height)
-    window_name.geometry(f"{window_name.min_width}x{window_name.min_height}+{x_coord}+{y_coord}")
+    window_master.minsize(window_master.min_width,window_master.min_height)
+    window_master.geometry(f'{window_master.min_width}x{window_master.min_height}+{x_pos}+{y_pos}')
 
-def style_setup(window_name, style="", txt_clr="black", bg="white", fnt=("",14),):
-    window_name.style = ttk.Style()
+def style_setup(self, style='', txt_clr='black', bg='white', fnt=('',14),):
+    self.style = ttk.Style()
 
-    window_name.style.configure(style+"TLabel", foreground=txt_clr, background=bg, font=fnt)
+    self.style.configure(style+'TLabel', foreground=txt_clr, background=bg, font=fnt)
 
-    widgets = ["TFrame", "TButton"]
+    widgets = ['TFrame', 'TButton']
     for i in widgets:
-        window_name.style.configure(style+i, background=bg)
+        self.style.configure(style+i, background=bg)
 
-def main_window_layout(self):
-    window_setup(self, title="LOGIN WINDOW", min_width=300, min_height=500, res=False)
-    style_setup(self, txt_clr="#ffdd00", bg="black", fnt=("Bauhaus 93",14))
-    style_setup(self, style="foot.", txt_clr="#5e5e5e", bg="black", fnt=("",8))
+def update_treeview(treeview, data):
+    treeview.delete(*treeview.get_children())
 
-    frm_mw_1 = ttk.Frame(self)
-    frm_mw_1.pack(fill=BOTH, expand=True)
+    for x in range(len(data)):
+        data.loc[x,'index'] = x+1
+        treeview.insert(parent='', index='end', iid=x, text='', 
+            values=(
+                x+1,
+                data.loc[x,'name'],
+                data.loc[x,'password'],
+                data.loc[x,'email']
+            )
+        )
 
-    lbl_mw_1 = ttk.Label(frm_mw_1, text="HELLO STRANGER\n\nENTER MASTER PASSWORD:", justify=CENTER)
-    lbl_mw_1.pack(pady=10)
+def login_window_layout(self):
+    #   SETUP
+    window_setup(self.login_window_master, 'LOGIN WINDOW', 300, 500)
+    style_setup(self, txt_clr='#ffdd00', bg='black', fnt=('Bauhaus 93',14))
+    style_setup(self, style='foot.', txt_clr='#5e5e5e', bg='black', fnt=('',8))
 
-    self.ent_mw_1 = ttk.Entry(frm_mw_1, show="*", justify=CENTER)
-    self.ent_mw_1.pack(pady=10)
+    #   FRAME
+    self.lw_frm_1 = ttk.Frame(self)
+    self.lw_frm_1.pack(fill=BOTH, expand=True)
+    self.lw_frm_2 = ttk.Frame(self)
+    self.lw_frm_2.pack(fill=BOTH, anchor=S)
 
-    btn_mw_1 = ttk.Button(frm_mw_1, text="LOG IN", command=self.on_click)
-    btn_mw_1.pack()
+    #   IMAGE
+    photo = tkinter.PhotoImage(file='img.png')
+    self.logo = ttk.Label(self.lw_frm_2, image=photo)
+    self.logo.pack(pady=50)
+    self.logo.photo = photo
 
-    frm_mw_2 = ttk.Frame(self)
-    frm_mw_2.pack(fill=BOTH, anchor=S)
+    #   LABEL
+    self.lw_lbl_top = ttk.Label(self.lw_frm_1, text='HELLO STRANGER\n\nENTER MASTER PASSWORD:', justify=CENTER)
+    self.lw_lbl_top.pack(pady=10)
+    self.lw_lbl_ft = ttk.Label(self.lw_frm_2, text='842u', style='foot.TLabel')
+    self.lw_lbl_ft.pack(side='right')
+    self.lw_lbl_vr = ttk.Label(self.lw_frm_2, text=f'{self.version}', style='foot.TLabel',)
+    self.lw_lbl_vr.pack(side='left')
 
-    photo = tkinter.PhotoImage(file="img.png")
-    logo = ttk.Label(frm_mw_2, image=photo)
-    logo.pack(pady=50)
-    logo.photo = photo
+    #   ENTRY
+    self.lw_ent_p = ttk.Entry(self.lw_frm_1, show='*', justify=CENTER)
+    self.lw_ent_p.pack(pady=10)
 
-    lbl_mw_ft = ttk.Label(frm_mw_2, text="842u", style="foot.TLabel")
-    lbl_mw_ft.pack(side="right")
+    #   BUTTON
+    self.lw_btn_li = ttk.Button(self.lw_frm_1, text='LOG IN', command=self.on_click_btn_li)
+    self.lw_btn_li.pack()
 
-    lbl_mw_vr = ttk.Label(frm_mw_2, text=f"v.{self.version}", style="foot.TLabel",)
-    lbl_mw_vr.pack(side="left")
+def acces_window_layout(self):
+    #   SETUP
+    window_setup(self.acces_window_master, 'ACCES WINDOW', 600, 700)
 
-def acces_window_layout(self, parent):
-    window_setup(self, title="ACCES WINDOW", min_width=450, min_height=700)
+    #   FRAME
+    self.aw_frm_1 = ttk.Frame(self)
+    self.aw_frm_1.pack(fill=BOTH, expand=True)
 
-    # FRAME
-    self.frm_aw_1 = ttk.Frame(self)
-    self.frm_aw_1.pack(fill=BOTH, expand=True)
-    self.frm_aw_1.columnconfigure(1, weight=0)
-    self.frm_aw_1.columnconfigure(2, weight=1)
-    self.frm_aw_1.rowconfigure(1, weight=0)
-    self.frm_aw_1.rowconfigure(tuple(range(2,5)), weight=1)
+    self.aw_frm_a = ttk.Frame(self)
+    self.aw_frm_a.pack(fill=BOTH, expand=True)
 
-    self.frm_aw_2 = ttk.Frame(self)
-    self.frm_aw_2.pack(fill=BOTH, expand=True)
+    self.aw_frm_b = ttk.Frame(self.aw_frm_a, width=10)
+    self.aw_frm_b.pack(fill=BOTH, side='right')
 
-    # LABEL
-    self.lbl_aw_d = ttk.Label(self.frm_aw_1, text="USER WHITELIST")
-    self.lbl_aw_d.grid(row=1, column=1, columnspan=4, pady=20)
+    self.aw_frm_n = ttk.Frame(self)
+    self.aw_frm_n.pack(fill=BOTH, expand=True)
 
-    self.lbl_aw_n = ttk.Label(self.frm_aw_1, text="User : ")
-    self.lbl_aw_n.grid(row=2, column=1, sticky=W, padx=20)
+    self.aw_frm_p = ttk.Frame(self)
+    self.aw_frm_p.pack(fill=BOTH, expand=True)
 
-    self.lbl_aw_p = ttk.Label(self.frm_aw_1, text="Password : ")
-    self.lbl_aw_p.grid(row=3, column=1, sticky=W, padx=20)
+    self.aw_frm_e = ttk.Frame(self)
+    self.aw_frm_e.pack(fill=BOTH, expand=True)
 
-    self.lbl_aw_e = ttk.Label(self.frm_aw_1, text="Email : ")
-    self.lbl_aw_e.grid(row=4, column=1, sticky=W, padx=20)
+    self.aw_frm_2 = ttk.Frame(self)
+    self.aw_frm_2.pack(fill=BOTH, expand=True)
 
-    # ENTRY
-    self.ent_aw_n = ttk.Entry(self.frm_aw_1)     #   https://stackoverflow.com/questions/1101750/tkinter-attributeerror-nonetype-object-has-no-attribute-attribute-name
-    self.ent_aw_n.grid(row=2, column=2, columnspan=3, sticky=E+W, padx=20)
+    #   LABEL
+    self.aw_lbl_top = ttk.Label(self.aw_frm_1, text='USER WHITELIST')
+    self.aw_lbl_top.pack(pady=10)
 
-    self.ent_aw_p = ttk.Entry(self.frm_aw_1)
-    self.ent_aw_p.grid(row=3, column=2, columnspan=3, sticky=E+W, padx=20)
+    self.aw_lbl_n = ttk.Label(self.aw_frm_n, text='User :', width=10)
+    self.aw_lbl_n.pack(side='left', padx=20)
 
-    self.ent_aw_e = ttk.Entry(self.frm_aw_1)
-    self.ent_aw_e.grid(row=4, column=2, columnspan=3, sticky=E+W, padx=20)
+    self.aw_lbl_p = ttk.Label(self.aw_frm_p, text='Password :', width=10)
+    self.aw_lbl_p.pack(side='left', padx=20)
 
-    # BUTTON
-    self.btn_aw_au = ttk.Button(self.frm_aw_1, text="ADD USER", command=self.on_click_add)
-    self.btn_aw_au.grid(row=5, column=1, sticky=W, pady=20, padx=20)
+    self.aw_lbl_e = ttk.Label(self.aw_frm_e, text='Email :', width=10)
+    self.aw_lbl_e.pack(side='left', padx=20)
 
-    self.btn_aw_au = ttk.Button(self.frm_aw_1, text="DELETE USER", command=self.on_click_del)
-    self.btn_aw_au.grid(row=5, column=2, sticky=W, pady=20)
+    #   ENTRY
+    self.aw_ent_n = ttk.Entry(self.aw_frm_n)
+    self.aw_ent_n.pack(side='right', padx=20, expand=True, fill=X)
 
-    self.btn_aw_au = ttk.Button(self.frm_aw_1, text="EDIT USER", command=self.on_click_edit)
-    self.btn_aw_au.grid(row=5, column=3, sticky=E, pady=20)
+    self.aw_ent_p = ttk.Entry(self.aw_frm_p)
+    self.aw_ent_p.pack(side='right', padx=20, expand=True, fill=X)
 
-    self.btn_aw_cls = ttk.Button(self.frm_aw_1, text="CLOSE", command=parent.destroy)
-    self.btn_aw_cls.grid(row=5, column=4, sticky=E, pady=20, padx=20)
+    self.aw_ent_e = ttk.Entry(self.aw_frm_e)
+    self.aw_ent_e.pack(side='right', padx=20, expand=True, fill=X)
 
-    # TREEVIEW
-    self.tw_aw_1 = ttk.Treeview(self.frm_aw_2, selectmode='browse')
-    self.tw_aw_1.pack()
+    #   BUTTON
+    self.aw_btn_au = ttk.Button(self.aw_frm_2, text='ADD USER', command=self.on_click_btn_au)
+    self.aw_btn_au.pack(padx=20)
 
-    self.tw_aw_1['columns'] = ('index', 'name', 'password', 'email')
+    self.aw_btn_eu = ttk.Button(self.aw_frm_b, text='EDIT USER', width=15, command=self.on_click_btn_eu)
+    self.aw_btn_eu.pack(padx=20)
 
-    self.tw_aw_1.column("#0", width=0, stretch=NO)
-    self.tw_aw_1.column("index", anchor=CENTER, width=80)
-    self.tw_aw_1.column("name", anchor=CENTER, width=80)
-    self.tw_aw_1.column("password", anchor=CENTER, width=80)
-    self.tw_aw_1.column("email", anchor=CENTER, width=80)
+    self.aw_btn_du = ttk.Button(self.aw_frm_b, text='DELETE USER', width=15, command=self.on_click_btn_du)
+    self.aw_btn_du.pack(padx=20, pady=20)
 
-    self.tw_aw_1.heading("#0", text="",  anchor=CENTER)
-    self.tw_aw_1.heading("index", text="#", anchor=CENTER)
-    self.tw_aw_1.heading("name", text="NAME", anchor=CENTER)
-    self.tw_aw_1.heading("password", text="PASSWORD", anchor=CENTER)
-    self.tw_aw_1.heading("email", text="EMAIL", anchor=CENTER)
+    #   TREEVIEW
+    self.aw_tw_1 = ttk.Treeview(self.aw_frm_a, selectmode='browse')
+    self.aw_tw_1.pack(padx=20, fill=BOTH, expand=True, side='left')
 
-def user_window_layout(self):
-    window_setup(self, title="USER EDIT", min_width=400, min_height=250)
+    self.aw_tw_1['columns'] = ('index', 'name', 'password', 'email')
 
-    # FRAME
-    self.frm_uw_1 = ttk.Frame(self)
-    self.frm_uw_1.pack(fill=BOTH, expand=True)
-    self.frm_uw_1.columnconfigure(1, weight=0)
-    self.frm_uw_1.columnconfigure(2, weight=1)
-    self.frm_uw_1.rowconfigure(1, weight=0)
-    self.frm_uw_1.rowconfigure(tuple(range(2,5)), weight=1)
+    self.aw_tw_1.column('#0', width=0, stretch=NO)
+    self.aw_tw_1.column('index', anchor=CENTER, width=30, stretch=NO)
+    self.aw_tw_1.column('name', anchor=CENTER, width=80)
+    self.aw_tw_1.column('password', anchor=CENTER, width=80)
+    self.aw_tw_1.column('email', anchor=CENTER, width=80)
 
-    self.frm_uw_2 = ttk.Frame(self)
-    self.frm_uw_2.pack(fill=BOTH)
-    self.frm_uw_2.columnconfigure(1, weight=0)
-    self.frm_uw_2.columnconfigure(2, weight=1)
-    self.frm_uw_2.rowconfigure(1, weight=0)
-    self.frm_uw_2.rowconfigure(tuple(range(2,5)), weight=1)
+    self.aw_tw_1.heading('#0', text='',  anchor=CENTER)
+    self.aw_tw_1.heading('index', text='#', anchor=CENTER)
+    self.aw_tw_1.heading('name', text='NAME', anchor=CENTER)
+    self.aw_tw_1.heading('password', text='PASSWORD', anchor=CENTER)
+    self.aw_tw_1.heading('email', text='EMAIL', anchor=CENTER)
 
-    # TREEVIEW
-    self.tw_uw_1 = ttk.Treeview(self.frm_uw_1, selectmode='none', height=1)
-    self.tw_uw_1.grid(row=1, column=1, columnspan=4)
+def user_window_layout(self, user):
+    #   SETUP
+    window_setup(self.user_window_master, f'#{user+1} USER WINDOW', 400, 300)
 
-    self.tw_uw_1['columns'] = ('index', 'name', 'password', 'email')
+    #   FRAME
+    self.uw_frm_1 = ttk.Frame(self)
+    self.uw_frm_1.pack(fill=BOTH, expand=True)
+    self.uw_frm_1.columnconfigure(1, weight=0)
+    self.uw_frm_1.columnconfigure(2, weight=1)
+    self.uw_frm_1.rowconfigure(1, weight=0)
+    self.uw_frm_1.rowconfigure(tuple(range(2,5)), weight=1)
 
-    self.tw_uw_1.column("#0", width=0, stretch=NO)
-    self.tw_uw_1.column("index", anchor=CENTER, width=25)
-    self.tw_uw_1.column("name", anchor=CENTER, width=100)
-    self.tw_uw_1.column("password", anchor=CENTER, width=100)
-    self.tw_uw_1.column("email", anchor=CENTER, width=100)
+    self.uw_frm_2 = ttk.Frame(self)
+    self.uw_frm_2.pack(fill=BOTH)
+    self.uw_frm_2.columnconfigure(1, weight=0)
+    self.uw_frm_2.columnconfigure(2, weight=1)
+    self.uw_frm_2.rowconfigure(1, weight=0)
+    self.uw_frm_2.rowconfigure(tuple(range(2,5)), weight=1)
 
-    self.tw_uw_1.heading("#0", text="",  anchor=CENTER)
-    self.tw_uw_1.heading("index", text="#", anchor=CENTER)
-    self.tw_uw_1.heading("name", text="NAME", anchor=CENTER)
-    self.tw_uw_1.heading("password", text="PASSWORD", anchor=CENTER)
-    self.tw_uw_1.heading("email", text="EMAIL", anchor=CENTER)
+    #   TREEVIEW
+    self.uw_tw_1 = ttk.Treeview(self.uw_frm_1, selectmode='none', height=1)
+    self.uw_tw_1.grid(row=1, column=1, columnspan=4)
 
-    # LABEL
-    self.lbl_uw_n = ttk.Label(self.frm_uw_1, text="User : ")
-    self.lbl_uw_n.grid(row=2, column=1, sticky=W, padx=20)
+    self.uw_tw_1['columns'] = ('index', 'name', 'password', 'email')
 
-    self.lbl_uw_p = ttk.Label(self.frm_uw_1, text="Password : ")
-    self.lbl_uw_p.grid(row=3, column=1, sticky=W, padx=20)
+    self.uw_tw_1.column('#0', width=0, stretch=NO)
+    self.uw_tw_1.column('index', anchor=CENTER, width=25)
+    self.uw_tw_1.column('name', anchor=CENTER, width=100)
+    self.uw_tw_1.column('password', anchor=CENTER, width=100)
+    self.uw_tw_1.column('email', anchor=CENTER, width=100)
 
-    self.lbl_uw_e = ttk.Label(self.frm_uw_1, text="Email : ")
-    self.lbl_uw_e.grid(row=4, column=1, sticky=W, padx=20)
+    self.uw_tw_1.heading('#0', text='',  anchor=CENTER)
+    self.uw_tw_1.heading('index', text='#', anchor=CENTER)
+    self.uw_tw_1.heading('name', text='NAME', anchor=CENTER)
+    self.uw_tw_1.heading('password', text='PASSWORD', anchor=CENTER)
+    self.uw_tw_1.heading('email', text='EMAIL', anchor=CENTER)
 
-    # ENTRY
-    self.ent_uw_n = ttk.Entry(self.frm_uw_1)
-    self.ent_uw_n.grid(row=2, column=2, sticky=E+W, padx=20)
+    #   LABEL
+    self.uw_lbl_n = ttk.Label(self.uw_frm_1, text='User : ')
+    self.uw_lbl_n.grid(row=2, column=1, sticky=W, padx=20)
 
-    self.ent_uw_p = ttk.Entry(self.frm_uw_1)
-    self.ent_uw_p.grid(row=3, column=2, sticky=E+W, padx=20)
+    self.uw_lbl_p = ttk.Label(self.uw_frm_1, text='Password : ')
+    self.uw_lbl_p.grid(row=3, column=1, sticky=W, padx=20)
 
-    self.ent_uw_e = ttk.Entry(self.frm_uw_1)
-    self.ent_uw_e.grid(row=4, column=2, sticky=E+W, padx=20)
+    self.uw_lbl_e = ttk.Label(self.uw_frm_1, text='Email : ')
+    self.uw_lbl_e.grid(row=4, column=1, sticky=W, padx=20)
 
-    # BUTTON
-    self.btn_uw_s = ttk.Button(self.frm_uw_2, text="SAVE", command=self.on_click_save)
-    self.btn_uw_s.grid(row=1, column=1, padx=20, pady=20)
+    #   ENTRY
+    self.uw_ent_n = ttk.Entry(self.uw_frm_1)
+    self.uw_ent_n.grid(row=2, column=2, sticky=E+W, padx=20)
 
-    self.btn_uw_r = ttk.Button(self.frm_uw_2, text="RESET")
-    self.btn_uw_r.grid(row=1, column=2, padx=20, pady=20)
+    self.uw_ent_p = ttk.Entry(self.uw_frm_1)
+    self.uw_ent_p.grid(row=3, column=2, sticky=E+W, padx=20)
 
-    self.btn_uw_c = ttk.Button(self.frm_uw_2, text="CLOSE", command=self.destroy)
-    self.btn_uw_c.grid(row=1, column=3, padx=20, pady=20)
+    self.uw_ent_e = ttk.Entry(self.uw_frm_1)
+    self.uw_ent_e.grid(row=4, column=2, sticky=E+W, padx=20)
+
+    #   BUTTON
+    self.uw_btn_s = ttk.Button(self.uw_frm_2, text='SAVE', command=self.on_click_btn_s)
+    self.uw_btn_s.grid(row=1, column=1, padx=20, pady=20)
+
+    self.uw_btn_r = ttk.Button(self.uw_frm_2, text='RESET', command=self.on_click_btn_r)
+    self.uw_btn_r.grid(row=1, column=2, padx=20, pady=20)

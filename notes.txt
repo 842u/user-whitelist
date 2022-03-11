@@ -5,7 +5,7 @@
 
     data hashing
 
-    ask when closing if saved
+    ask when closing if not saved
 
     logout button
 
@@ -19,7 +19,15 @@
 
     clear entry after adding user
 
-    work on csv only and refresh treeview only???
+    work on csv only and refresh treeview only
+
+    self making version based on git brnaches
+
+    style_setup() tweak in functions.py
+
+    aw_btn_eu and aw_btn_du inactive when user not selected
+
+    max user number on label display
 
 
 ### DONE ###
@@ -42,3 +50,4 @@
 5,e,e,e
 6,f,f,f
 7,g,g,g
+
