@@ -1,38 +1,39 @@
-
 ### TODO ###
-
-    all operations on one data frame? -> parent AccesWindow?
 
     data hashing
 
     ask when closing if not saved
 
-    logout button
-
-    close app butons fix
-
-    make some animations if possible
-
-    edit multiple user at one time -> selectmode treeview
-
-    if user not selected to delete or edit -> except
-
-    clear entry after adding user
-
-    work on csv only and refresh treeview only
+    style_setup() tweak in functions.py
 
     self making version based on git brnaches
 
-    style_setup() tweak in functions.py
+    edit multiple user at one time -> selectmode treeview
 
-    aw_btn_eu and aw_btn_du inactive when user not selected
-
-    max user number on label display
+    make some animations if possible
 
 
 ### DONE ###
 
-    PANDAS?!?!?!? TO WORK WITH CSV
+    work on csv only and refresh treeview only
+
+    window icons
+
+    if user not selected to delete or edit -> except
+
+    aw_btn_eu and aw_btn_du inactive when user not selected
+
+    logout button
+
+    max user number on label display
+
+    close app butons fix
+
+    clear entry after adding user
+
+    all operations on one data frame -> parent AccesWindow
+
+    pandas to work with csv
 
     display user list and add to user list 
 

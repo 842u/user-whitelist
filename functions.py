@@ -103,7 +103,7 @@ def acces_window_layout(self):
     self.aw_frm_2.pack(fill=BOTH, expand=True)
 
     #   LABEL
-    self.aw_lbl_top = ttk.Label(self.aw_frm_1, text='USER WHITELIST')
+    self.aw_lbl_top = ttk.Label(self.aw_frm_1, justify=CENTER, text='WHITELIST')
     self.aw_lbl_top.pack(pady=10)
 
     self.aw_lbl_n = ttk.Label(self.aw_frm_n, text='User :', width=10)

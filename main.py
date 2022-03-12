@@ -1,4 +1,3 @@
-# import tkinter
 import pandas as pd
 from functions import *
 from tkinter import *
@@ -19,10 +18,10 @@ class LoginWindow(Frame):
     def on_click_btn_li(self):
         if  self.lw_ent_p.get() == self.__master_password:
             messagebox.showinfo('PASSWORD OK', 'ACCES GRANTED')
-
+            self.lw_ent_p.delete(0, 'end')
             new_toplevel_window = Toplevel(self)
+            new_toplevel_window.iconbitmap('icon.ico')
             aw = AccesWindow(new_toplevel_window, self)
-
         else:
             messagebox.showerror('PASSWORD CHECK', 'WRONG PASSWORD')
 
@@ -37,9 +36,9 @@ class AccesWindow(Frame):
         self.acces_window_master = master
         self.login_window = login_window
 
-        acces_window_layout(self)
-
         self.data_frame = pd.read_csv('whitelist.csv', index_col=False)
+
+        acces_window_layout(self)
 
         update_treeview(treeview=self.aw_tw_1, data=self.data_frame)
         
@@ -58,9 +57,12 @@ class AccesWindow(Frame):
             messagebox.showerror("DATA INCOMPLETE", "PLEASE ENTER ALL DATA", parent=self.acces_window_master)
 
         elif actual_number_of_users < self.__user_limit:
-
+            
+            self.aw_ent_n.delete(0, 'end')
+            self.aw_ent_p.delete(0, 'end')
+            self.aw_ent_e.delete(0, 'end')
+            
             self.data_frame.loc[-1] = new_user_data
-
             self.data_frame = self.data_frame.reset_index(drop=True)
 
             actual_number_of_users = len(self.data_frame)
@@ -81,21 +83,28 @@ class AccesWindow(Frame):
         else:
             messagebox.showerror("USER NUMBER", "MAXIMUM NUMBER OF USERS REACHED", parent=self.acces_window_master)
 
-    def on_click_btn_du(self):
-        self.selected_user = int(self.aw_tw_1.focus())
-
-        self.data_frame = self.data_frame.drop(self.selected_user)
-        self.data_frame = self.data_frame.reset_index(drop=True)
-
-        update_treeview(treeview=self.aw_tw_1, data=self.data_frame)
-
-        self.data_frame.to_csv('whitelist.csv', index=False)
-
     def on_click_btn_eu(self):
-        self.selected_user = int(self.aw_tw_1.focus())
+        if self.aw_tw_1.focus():
+            self.selected_user = int(self.aw_tw_1.focus())
 
-        new_toplevel_window = Toplevel(self)
-        uw = UserWindow(new_toplevel_window, self)
+            new_toplevel_window = Toplevel(self)
+            new_toplevel_window.iconbitmap('icon.ico')
+            uw = UserWindow(new_toplevel_window, self)
+        else:
+            messagebox.showerror("USER NOT SELECTED", "PLEASE SELECT USER TO EDIT", parent=self.acces_window_master)
+
+    def on_click_btn_du(self):
+        if self.aw_tw_1.focus():
+            self.selected_user = int(self.aw_tw_1.focus())
+
+            self.data_frame = self.data_frame.drop(self.selected_user)
+            self.data_frame = self.data_frame.reset_index(drop=True)
+
+            update_treeview(treeview=self.aw_tw_1, data=self.data_frame)
+
+            self.data_frame.to_csv('whitelist.csv', index=False)
+        else:
+            messagebox.showerror("USER NOT SELECTED", "PLEASE SELECT USER TO DELETE", parent=self.acces_window_master)
 
 
 class UserWindow(Frame):
@@ -109,6 +118,10 @@ class UserWindow(Frame):
         self.bufored_user_data = self.acces_window.data_frame.loc[self.acces_window.selected_user]
 
         user_window_layout(self, self.acces_window.selected_user)
+
+        self.uw_ent_n.insert(0, self.bufored_user_data[1])
+        self.uw_ent_p.insert(0, self.bufored_user_data[2])
+        self.uw_ent_e.insert(0, self.bufored_user_data[3])
 
         self.uw_tw_1.insert(parent='', index='end', iid=self.acces_window.selected_user, text='', 
                 values=(
@@ -128,11 +141,9 @@ class UserWindow(Frame):
         ]
 
         self.acces_window.data_frame.loc[self.acces_window.selected_user] = edited_user_data
-
         self.acces_window.data_frame.to_csv('whitelist.csv', index=False)
 
         self.uw_tw_1.delete(self.acces_window.selected_user)
-
         self.uw_tw_1.insert(parent='', index='end', iid=self.acces_window.selected_user, text='', values=edited_user_data)
 
         update_treeview(treeview=self.acces_window.aw_tw_1, data=self.acces_window.data_frame)
@@ -150,6 +161,7 @@ class UserWindow(Frame):
 
 def main():
     root = Tk()
+    root.iconbitmap('icon.ico')
     lw = LoginWindow(root)
     root.mainloop()
 
