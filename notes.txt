@@ -1,0 +1,54 @@
+### TODO ###
+
+    data hashing
+
+    ask when closing if not saved
+
+    style_setup() tweak in functions.py
+
+    self making version based on git brnaches
+
+    edit multiple user at one time -> selectmode treeview
+
+    make some animations if possible
+
+
+### DONE ###
+
+    work on csv only and refresh treeview only
+
+    window icons
+
+    if user not selected to delete or edit -> except
+
+    aw_btn_eu and aw_btn_du inactive when user not selected
+
+    logout button
+
+    max user number on label display
+
+    close app butons fix
+
+    clear entry after adding user
+
+    all operations on one data frame -> parent AccesWindow
+
+    pandas to work with csv
+
+    display user list and add to user list 
+
+    read from csv method - v0.1.2
+
+    write to csv method - v0.1.2
+
+
+### TEMP ###
+
+1,a,a,a
+2,b,b,b
+3,c,c,c
+4,d,d,d
+5,e,e,e
+6,f,f,f
+7,g,g,g
+
